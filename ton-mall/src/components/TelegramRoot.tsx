@@ -3,6 +3,18 @@
 import { PropsWithChildren, useEffect } from 'react';
 import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 
+interface Window {
+  Telegram?: {
+    WebApp?: {
+      ready: () => void;
+      expand: () => void;
+      close: () => void;
+      initData: string;
+      initDataUnsafe: any;
+    };
+  };
+}
+
 export function TelegramRoot({ children }: PropsWithChildren) {
   useEffect(() => {
     try {
