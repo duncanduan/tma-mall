@@ -8,6 +8,7 @@ import { I18nProvider } from '@/core/i18n/provider';
 import '@telegram-apps/telegram-ui/dist/styles.css';
 import 'normalize.css/normalize.css';
 import './_assets/globals.css';
+import { AppRootProvider } from '@/components/AppRootProvider';
 
 export const metadata: Metadata = {
   title: 'TON Mall',
@@ -20,9 +21,11 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
+        <AppRootProvider>
         <I18nProvider>
           {children}
         </I18nProvider>
+        </AppRootProvider>
       </body>
     </html>
   );
