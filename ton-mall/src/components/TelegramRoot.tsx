@@ -11,8 +11,8 @@ export function TelegramRoot({ children }: PropsWithChildren) {
       console.log('Telegram launch params:', launchParams);
 
       init();
-      window?.Telegram?.WebApp?.ready?.();
-      window?.Telegram?.WebApp?.expand?.();
+      window.Telegram?.WebApp?.ready?.();
+      window.Telegram?.WebApp?.expand?.();
     } catch (err) {
       console.warn('Not running inside Telegram Mini App, mock mode', err);
 
