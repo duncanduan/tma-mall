@@ -9,7 +9,7 @@ import '@telegram-apps/telegram-ui/dist/styles.css';
 import 'normalize.css/normalize.css';
 import './_assets/globals.css';
 import { AppRootProvider } from '@/components/AppRootProvider';
-
+import { TonConnectProvider } from '@/components/TonConnectProvider';
 export const metadata: Metadata = {
   title: 'TON Mall',
   description: 'Telegram Mini App Mall',
@@ -21,11 +21,13 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
+        <TonConnectProvider>
         <AppRootProvider>
         <I18nProvider>
           {children}
         </I18nProvider>
         </AppRootProvider>
+        </TonConnectProvider>
       </body>
     </html>
   );
