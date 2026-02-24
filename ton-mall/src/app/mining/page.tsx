@@ -262,8 +262,8 @@ export default function MiningPage() {
               paddingTop: '12px',
               borderTop: '1px solid rgba(255,255,255,0.1)'
             }}>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>
-                {wallet.account?.address ? `${wallet.account.address.slice(0, 6)}...${wallet.account.address.slice(-4)}` : 'Wallet Connected'}
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', wordBreak: 'break-all' }}>
+                {wallet.account?.address || 'Wallet Connected'}
               </div>
               <button
                 onClick={handleEditWallet}
