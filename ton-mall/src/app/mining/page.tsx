@@ -23,6 +23,21 @@ export default function MiningPage() {
   const [showWalletModal, setShowWalletModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (isConnected) {
+        window.localStorage.removeItem('ton-connect-storage_lock');
+        window.localStorage.removeItem('ton-connect-storage');
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isConnected]);
+
   const handleClose = () => {
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.close();
@@ -60,7 +75,12 @@ export default function MiningPage() {
   };
 
   const handleDisconnectWallet = () => {
+    window.localStorage.removeItem('ton-connect-storage_lock');
+    window.localStorage.removeItem('ton-connect-storage');
     setShowWalletModal(false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   return (
