@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { TonConnectButton, useTonWallet } from '@tonconnect/ui-react';
 import {
   Button,
@@ -12,20 +13,53 @@ import { Page } from '@/components/Page';
 import { useUserData } from '@/hooks/useUserData';
 
 export default function MiningPage() {
+  const router = useRouter();
   const wallet = useTonWallet();
   const { userData, loading, claimMining, isConnected } = useUserData();
   const [claiming, setClaiming] = useState(false);
   const [earned, setEarned] = useState<string | null>(null);
+  const [currentMiningBalance, setCurrentMiningBalance] = useState('0.003935160');
+  const [withdrawableBalance, setWithdrawableBalance] = useState('10.09392449');
+  const [showWalletModal, setShowWalletModal] = useState(false);
+
+  const handleClose = () => {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.close();
+    }
+  };
+
+  const handleWithdraw = () => {
+    if (!isConnected) {
+      router.push('/ton-connect');
+    } else {
+      router.push('/withdraw');
+    }
+  };
 
   const handleClaim = async () => {
     setClaiming(true);
     try {
       const amount = await claimMining();
       setEarned(amount);
+      
+      const currentMining = parseFloat(currentMiningBalance);
+      const withdrawable = parseFloat(withdrawableBalance);
+      
+      setWithdrawableBalance((withdrawable + currentMining).toFixed(9));
+      setCurrentMiningBalance('0.000000000');
+      
       setTimeout(() => setEarned(null), 3000);
     } finally {
       setClaiming(false);
     }
+  };
+
+  const handleEditWallet = () => {
+    setShowWalletModal(true);
+  };
+
+  const handleDisconnectWallet = () => {
+    setShowWalletModal(false);
   };
 
   if (!isConnected) {
@@ -71,7 +105,21 @@ export default function MiningPage() {
           marginBottom: '16px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ fontSize: 18, fontWeight: 'bold', color: '#fff', marginRight: 8 }}>Close</span>
+            <button 
+              onClick={handleClose}
+              style={{ 
+                fontSize: 18, 
+                fontWeight: 'bold', 
+                color: '#fff', 
+                marginRight: 8,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0
+              }}
+            >
+              Close
+            </button>
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span style={{ fontSize: 18, fontWeight: 'bold', color: '#fff', marginRight: 8 }}>Free TON</span>
@@ -123,7 +171,7 @@ export default function MiningPage() {
             zIndex: 1
           }}>
             <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', marginBottom: 4 }}>TON</div>
-            <div style={{ fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 8 }}>0.003935160</div>
+            <div style={{ fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 8 }}>{currentMiningBalance}</div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>Total Power: 0.000019290 TON/s</div>
           </div>
 
@@ -205,7 +253,8 @@ export default function MiningPage() {
           <div style={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
-            alignItems: 'center'
+            alignItems: 'center',
+            marginBottom: '12px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div style={{
@@ -227,11 +276,12 @@ export default function MiningPage() {
                 }} />
               </div>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 'bold' }}>10.09392449</div>
+                <div style={{ fontSize: 18, fontWeight: 'bold' }}>{withdrawableBalance}</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>≈ $13.75</div>
               </div>
             </div>
             <Button
+              onClick={handleWithdraw}
               style={{
                 backgroundColor: '#4CD964',
                 color: '#000',
@@ -243,6 +293,33 @@ export default function MiningPage() {
               Withdraw
             </Button>
           </div>
+          
+          {isConnected && wallet && (
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              paddingTop: '12px',
+              borderTop: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>
+                {wallet.account?.address ? `${wallet.account.address.slice(0, 6)}...${wallet.account.address.slice(-4)}` : 'Wallet Connected'}
+              </div>
+              <button
+                onClick={handleEditWallet}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#4CD964',
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  fontWeight: 'bold'
+                }}
+              >
+                Edit
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Invite Friends */}
@@ -386,6 +463,77 @@ export default function MiningPage() {
             </div>
           ))}
         </div>
+
+        {/* Wallet Modal */}
+        {showWalletModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: '#1a1a1a',
+              borderRadius: 16,
+              padding: '24px',
+              width: '90%',
+              maxWidth: '400px'
+            }}>
+              <div style={{ 
+                fontSize: 18, 
+                fontWeight: 'bold', 
+                marginBottom: '20px',
+                textAlign: 'center'
+              }}>
+                Wallet Address
+              </div>
+              <div style={{
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                borderRadius: 8,
+                padding: '16px',
+                marginBottom: '20px',
+                wordBreak: 'break-all',
+                fontSize: 14,
+                textAlign: 'center'
+              }}>
+                {wallet?.account?.address || 'No wallet connected'}
+              </div>
+              <Button
+                onClick={handleDisconnectWallet}
+                stretched
+                style={{
+                  backgroundColor: '#FF3B30',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  borderRadius: 8,
+                  padding: '16px',
+                  marginBottom: '12px'
+                }}
+              >
+                Disconnect Wallet
+              </Button>
+              <Button
+                onClick={() => setShowWalletModal(false)}
+                stretched
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  borderRadius: 8,
+                  padding: '16px'
+                }}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </Page>
   );
