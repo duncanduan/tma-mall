@@ -450,8 +450,30 @@ export default function MiningPage() {
               borderRadius: 16,
               padding: '24px',
               width: '90%',
-              maxWidth: '400px'
+              maxWidth: '400px',
+              position: 'relative'
             }}>
+              <button
+                onClick={() => setShowWalletModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  background: 'none',
+                  border: 'none',
+                  color: 'rgba(255,255,255,0.6)',
+                  fontSize: 20,
+                  cursor: 'pointer',
+                  padding: 0,
+                  width: 24,
+                  height: 24,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                ×
+              </button>
               <div style={{ 
                 fontSize: 18, 
                 fontWeight: 'bold', 
@@ -479,24 +501,10 @@ export default function MiningPage() {
                   color: '#fff',
                   fontWeight: 'bold',
                   borderRadius: 8,
-                  padding: '16px',
-                  marginBottom: '12px'
-                }}
-              >
-                Disconnect Wallet
-              </Button>
-              <Button
-                onClick={() => setShowWalletModal(false)}
-                stretched
-                style={{
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  borderRadius: 8,
                   padding: '16px'
                 }}
               >
-                Close
+                Disconnect Wallet
               </Button>
             </div>
           </div>
@@ -521,8 +529,30 @@ export default function MiningPage() {
               borderRadius: 16,
               padding: '24px',
               width: '90%',
-              maxWidth: '400px'
+              maxWidth: '400px',
+              position: 'relative'
             }}>
+              <button
+                onClick={() => setShowConnectModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  background: 'none',
+                  border: 'none',
+                  color: 'rgba(255,255,255,0.6)',
+                  fontSize: 20,
+                  cursor: 'pointer',
+                  padding: 0,
+                  width: 24,
+                  height: 24,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                ×
+              </button>
               <div style={{ 
                 fontSize: 18, 
                 fontWeight: 'bold', 
@@ -543,19 +573,6 @@ export default function MiningPage() {
               <div style={{ marginBottom: '12px' }}>
                 <TonConnectButton />
               </div>
-              <Button
-                onClick={() => setShowConnectModal(false)}
-                stretched
-                style={{
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  borderRadius: 8,
-                  padding: '16px'
-                }}
-              >
-                Cancel
-              </Button>
             </div>
           </div>
         )}
