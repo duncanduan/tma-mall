@@ -570,7 +570,12 @@ export default function MiningPage() {
               }}>
                 Please connect your TON wallet to withdraw your earnings
               </div>
-              <div style={{ marginBottom: '12px' }}>
+              <div style={{ 
+                marginBottom: '12px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
                 <TonConnectButton />
               </div>
             </div>
