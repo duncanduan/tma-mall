@@ -1,5 +1,15 @@
 {
   "url": "https://tma-mall-6sbf.vercel.app/tonconnect-manifest.json",
-  "name": "TON Mall",
-  "iconUrl": "https://tma-mall-6sbf.vercel.app/logo.png"
+  "name": "TON Mining",
+  "iconUrl": "https://tma-mall-6sbf.vercel.app/logo.png",
+  "description": "TON Mining - Earn TON by mining",
+  "chains": [
+    "-239" 
+  ],
+  "items": [
+    {
+      "title": "Open",
+      "type": "tonaddr"
+    }
+  ]
 }

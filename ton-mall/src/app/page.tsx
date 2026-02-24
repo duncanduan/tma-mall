@@ -1,71 +1,111 @@
 'use client';
 
-import { Section, Cell, Image, List } from '@telegram-apps/telegram-ui';
-import { useTranslations } from 'next-intl';
-
-import { Link } from '@/components/Link/Link';
-import { LocaleSwitcher } from '@/components/LocaleSwitcher/LocaleSwitcher';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Page } from '@/components/Page';
-import { TelegramRoot } from '@/components/TelegramRoot';
-import { UIRoot } from '@/components/UIRoot';
-
-import tonSvg from './_assets/ton.svg';
 
 export default function Home() {
-  const t = useTranslations('i18n');
+  const router = useRouter();
+  
+  useEffect(() => {
+    // Redirect to mining page after 2 seconds
+    const timer = setTimeout(() => {
+      router.push('/mining');
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
-    <TelegramRoot>
-      <UIRoot>
-      <Page back={false}>
-        <List>
-          <Section
-            header="Features"
-            footer="You can use these pages to learn more about features, provided by Telegram Mini Apps and other useful projects"
-          >
-            <Link href="/ton-connect">
-              <Cell
-                before={
-                  <Image
-                    src={tonSvg.src}
-                    style={{ backgroundColor: '#007AFF' }}
-                    alt="TON Logo"
-                  />
-                }
-                subtitle="Connect your TON wallet"
-              >
-                TON Connect
-              </Cell>
-            </Link>
-          </Section>
-
-          <Section
-            header="Application Launch Data"
-            footer="These pages help developer to learn more about current launch information"
-          >
-            <Link href="/init-data">
-              <Cell subtitle="User data, chat information, technical data">
-                Init Data
-              </Cell>
-            </Link>
-            <Link href="/launch-params">
-              <Cell subtitle="Platform identifier, Mini Apps version, etc.">
-                Launch Parameters
-              </Cell>
-            </Link>
-            <Link href="/theme-params">
-              <Cell subtitle="Telegram application palette information">
-                Theme Parameters
-              </Cell>
-            </Link>
-          </Section>
-
-          <Section header={t('header')} footer={t('footer')}>
-            <LocaleSwitcher />
-          </Section>
-        </List>
-      </Page>
-      </UIRoot>
-    </TelegramRoot>
+    <Page>
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        minHeight: '100vh',
+        backgroundColor: '#000',
+        color: '#4CD964',
+        position: 'relative',
+        padding: '20px'
+      }}>
+        {/* Header */}
+        <div style={{ 
+          position: 'absolute', 
+          top: 20, 
+          left: 20, 
+          display: 'flex', 
+          alignItems: 'center'
+        }}>
+          <span style={{ 
+            fontSize: 18, 
+            fontWeight: 'bold', 
+            color: '#fff',
+            marginRight: 8
+          }}>Free TON</span>
+          <span style={{ color: '#4CD964' }}>💎</span>
+        </div>
+        
+        {/* Top Right Menu */}
+        <div style={{ 
+          position: 'absolute', 
+          top: 20, 
+          right: 20, 
+          display: 'flex', 
+          alignItems: 'center',
+          gap: 12
+        }}>
+          <span style={{ color: '#fff' }}>▼</span>
+          <span style={{ color: '#fff' }}>⋮</span>
+        </div>
+        
+        {/* Loading Animation */}
+        <div style={{
+          width: 100,
+          height: 100,
+          borderRadius: '50%',
+          border: '2px solid rgba(76, 217, 100, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          animation: 'spin 2s linear infinite'
+        }}>
+          <div style={{
+            width: 60,
+            height: 60,
+            background: '#4CD964',
+            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              background: '#000',
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }} />
+          </div>
+        </div>
+        
+        {/* Loading Text */}
+        <div style={{
+          marginTop: 24,
+          fontSize: 18,
+          color: '#4CD964',
+          fontWeight: '500'
+        }}>
+          Loading...
+        </div>
+        
+        {/* Add animation keyframes */}
+        <style jsx global>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    </Page>
   );
 }
