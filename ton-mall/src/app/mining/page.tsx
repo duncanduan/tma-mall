@@ -99,7 +99,7 @@ export default function MiningPage() {
           marginBottom: '16px',
           fontSize: 14
         }}>
-          @Madella Withdrawal has been received 16
+          {isConnected ? 'Wallet connected ✅' : 'Wallet not connected'}
         </div>
 
         {/* Main Mining Card */}
@@ -281,6 +281,8 @@ export default function MiningPage() {
             </div>
           )}
         </div>
+
+
 
         {/* Invite Friends */}
         <div style={{

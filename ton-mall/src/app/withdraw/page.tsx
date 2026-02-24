@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTonWallet } from '@tonconnect/ui-react';
 import {
@@ -16,6 +16,12 @@ export default function WithdrawPage() {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [withdrawAddress, setWithdrawAddress] = useState('');
   const [withdrawing, setWithdrawing] = useState(false);
+
+  useEffect(() => {
+    if (wallet?.account?.address) {
+      setWithdrawAddress(wallet.account.address);
+    }
+  }, [wallet]);
 
   const handleBack = () => {
     router.push('/mining');
