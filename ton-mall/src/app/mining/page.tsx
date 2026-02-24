@@ -21,6 +21,7 @@ export default function MiningPage() {
   const [currentMiningBalance, setCurrentMiningBalance] = useState('0.003935160');
   const [withdrawableBalance, setWithdrawableBalance] = useState('10.09392449');
   const [showWalletModal, setShowWalletModal] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
 
   const handleClose = () => {
     if (window.Telegram && window.Telegram.WebApp) {
@@ -30,7 +31,7 @@ export default function MiningPage() {
 
   const handleWithdraw = () => {
     if (!isConnected) {
-      router.push('/ton-connect');
+      setShowConnectModal(true);
     } else {
       router.push('/withdraw');
     }
@@ -61,33 +62,6 @@ export default function MiningPage() {
   const handleDisconnectWallet = () => {
     setShowWalletModal(false);
   };
-
-  if (!isConnected) {
-    return (
-      <Page>
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          minHeight: '100vh',
-          padding: '20px',
-          textAlign: 'center',
-          backgroundColor: '#000'
-        }}>
-          <div style={{ 
-            fontSize: 80, 
-            marginBottom: 20 
-          }}>💎</div>
-          <Title level="1" style={{ marginBottom: 8, color: '#fff' }}>TON Mining</Title>
-          <Text style={{ color: '#999', marginBottom: 24 }}>
-            Connect your wallet to start mining TON
-          </Text>
-          <TonConnectButton />
-        </div>
-      </Page>
-    );
-  }
 
   return (
     <Page>
@@ -496,6 +470,64 @@ export default function MiningPage() {
                 }}
               >
                 Close
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Connect Wallet Modal */}
+        {showConnectModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: '#1a1a1a',
+              borderRadius: 16,
+              padding: '24px',
+              width: '90%',
+              maxWidth: '400px'
+            }}>
+              <div style={{ 
+                fontSize: 18, 
+                fontWeight: 'bold', 
+                marginBottom: '20px',
+                textAlign: 'center'
+              }}>
+                Connect Wallet
+              </div>
+              <div style={{
+                fontSize: 14,
+                color: 'rgba(255,255,255,0.8)',
+                marginBottom: '24px',
+                textAlign: 'center',
+                lineHeight: 1.4
+              }}>
+                Please connect your TON wallet to withdraw your earnings
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <TonConnectButton />
+              </div>
+              <Button
+                onClick={() => setShowConnectModal(false)}
+                stretched
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  borderRadius: 8,
+                  padding: '16px'
+                }}
+              >
+                Cancel
               </Button>
             </div>
           </div>
