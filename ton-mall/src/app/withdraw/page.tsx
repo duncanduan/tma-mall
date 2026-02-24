@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTonWallet } from '@tonconnect/ui-react';
+import { useTonWallet, useTonAddress } from '@tonconnect/ui-react';
 import {
   Button,
   Text,
@@ -13,15 +13,16 @@ import { Page } from '@/components/Page';
 export default function WithdrawPage() {
   const router = useRouter();
   const wallet = useTonWallet();
+  const userFriendlyAddress = useTonAddress();
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [withdrawAddress, setWithdrawAddress] = useState('');
   const [withdrawing, setWithdrawing] = useState(false);
 
   useEffect(() => {
-    if (wallet?.account?.address) {
-      setWithdrawAddress(wallet.account.address);
+    if (userFriendlyAddress) {
+      setWithdrawAddress(userFriendlyAddress);
     }
-  }, [wallet]);
+  }, [userFriendlyAddress]);
 
   const handleBack = () => {
     router.push('/mining');

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { TonConnectButton, useTonWallet } from '@tonconnect/ui-react';
+import { TonConnectButton, useTonWallet, useTonAddress } from '@tonconnect/ui-react';
 import {
   Button,
   Text,
@@ -15,6 +15,7 @@ import { useUserData } from '@/hooks/useUserData';
 export default function MiningPage() {
   const router = useRouter();
   const wallet = useTonWallet();
+  const userFriendlyAddress = useTonAddress();
   const { userData, loading, claimMining, isConnected } = useUserData();
   const [claiming, setClaiming] = useState(false);
   const [earned, setEarned] = useState<string | null>(null);
@@ -263,7 +264,7 @@ export default function MiningPage() {
               borderTop: '1px solid rgba(255,255,255,0.1)'
             }}>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', wordBreak: 'break-all' }}>
-                {wallet.account?.address || 'Wallet Connected'}
+                {userFriendlyAddress || 'Wallet Connected'}
               </div>
               <button
                 onClick={handleEditWallet}
@@ -464,7 +465,7 @@ export default function MiningPage() {
                 fontSize: 14,
                 textAlign: 'center'
               }}>
-                {wallet?.account?.address || 'No wallet connected'}
+                {userFriendlyAddress || 'No wallet connected'}
               </div>
               <Button
                 onClick={handleDisconnectWallet}
