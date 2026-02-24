@@ -58,5 +58,5 @@ export function useUserData() {
     return earned;
   };
 
-  return { userData, loading, claimMining, isConnected: !!wallet };
+  return { userData, loading, claimMining, isConnected: !!wallet?.account };
 }
