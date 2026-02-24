@@ -97,40 +97,6 @@ export default function MiningPage() {
         padding: '16px',
         color: '#fff'
       }}>
-        {/* Header */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '16px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <button 
-              onClick={handleClose}
-              style={{ 
-                fontSize: 18, 
-                fontWeight: 'bold', 
-                color: '#fff', 
-                marginRight: 8,
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0
-              }}
-            >
-              Close
-            </button>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ fontSize: 18, fontWeight: 'bold', color: '#fff', marginRight: 8 }}>Free TON</span>
-            <span style={{ color: '#4CD964' }}>✅</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ color: '#fff' }}>▼</span>
-            <span style={{ color: '#fff' }}>⋮</span>
-          </div>
-        </div>
-
         {/* Notification */}
         <div style={{
           backgroundColor: 'rgba(76, 217, 100, 0.2)',
