@@ -29,36 +29,6 @@ export default function Home() {
         position: 'relative',
         padding: '20px'
       }}>
-        {/* Header */}
-        <div style={{ 
-          position: 'absolute', 
-          top: 20, 
-          left: 20, 
-          display: 'flex', 
-          alignItems: 'center'
-        }}>
-          <span style={{ 
-            fontSize: 18, 
-            fontWeight: 'bold', 
-            color: '#fff',
-            marginRight: 8
-          }}>Free TON</span>
-          <span style={{ color: '#4CD964' }}>💎</span>
-        </div>
-        
-        {/* Top Right Menu */}
-        <div style={{ 
-          position: 'absolute', 
-          top: 20, 
-          right: 20, 
-          display: 'flex', 
-          alignItems: 'center',
-          gap: 12
-        }}>
-          <span style={{ color: '#fff' }}>▼</span>
-          <span style={{ color: '#fff' }}>⋮</span>
-        </div>
-        
         {/* Loading Animation */}
         <div style={{
           width: 100,
