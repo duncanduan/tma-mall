@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { TonConnectButton, useTonWallet, useTonAddress } from '@tonconnect/ui-react';
+import { TonConnectButton, useTonWallet, useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
 import {
   Button,
   Text,
@@ -16,6 +16,7 @@ export default function MiningPage() {
   const router = useRouter();
   const wallet = useTonWallet();
   const userFriendlyAddress = useTonAddress();
+  const [tonConnectUI] = useTonConnectUI();
   const { userData, loading, claimMining, isConnected } = useUserData();
   const [claiming, setClaiming] = useState(false);
   const [earned, setEarned] = useState<string | null>(null);
@@ -75,9 +76,12 @@ export default function MiningPage() {
     setShowWalletModal(true);
   };
 
-  const handleDisconnectWallet = () => {
-    window.localStorage.removeItem('ton-connect-storage_lock');
-    window.localStorage.removeItem('ton-connect-storage');
+  const handleDisconnectWallet = async () => {
+    try {
+      await tonConnectUI.disconnect();
+    } catch (error) {
+      console.error('Disconnect error:', error);
+    }
     setShowWalletModal(false);
     setTimeout(() => {
       window.location.reload();
