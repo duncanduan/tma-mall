@@ -165,7 +165,7 @@ export default function MiningPage() {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '80px', height: '80px' }} />
+                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '100px', height: '100px' }} />
               </div>
             </div>
           </div>
