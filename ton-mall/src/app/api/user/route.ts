@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { User, LoginRecord } from '@/types/user';
+import { ObjectId } from 'mongodb';
 
 export async function GET(request: NextRequest) {
   try {
@@ -45,13 +46,13 @@ export async function POST(request: NextRequest) {
         userAgent: request.headers.get('user-agent') || undefined,
       };
 
-      await db.collection('users').updateOne(
-        { walletAddress },
-        {
-          $push: { loginRecords: loginRecord },
-          $set: { updatedAt: new Date() }
-        }
-      );
+   const result = await db.collection('users').updateOne(
+      { walletAddress },
+      {
+        $push: { loginRecords: loginRecord as any },
+        $set: { updatedAt: new Date() }
+      }
+    );
 
       return NextResponse.json({ message: 'User already exists, login record added', user: existingUser });
     }
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date(),
     };
 
-    const result = await db.collection('users').insertOne(newUser);
+    const result = await db.collection('users').insertOne(newUser as any);
     
     return NextResponse.json({ 
       message: 'User created successfully', 

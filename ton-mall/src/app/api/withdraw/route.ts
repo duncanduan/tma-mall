@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { WithdrawRecord } from '@/types/user';
+import { ObjectId } from 'mongodb';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
     const result = await db.collection('users').updateOne(
       { walletAddress },
       {
-        $push: { withdrawRecords: withdrawRecord },
+        $push: { withdrawRecords: withdrawRecord as any },
         $set: { updatedAt: new Date() }
       }
     );
