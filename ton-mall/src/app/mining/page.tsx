@@ -161,10 +161,16 @@ export default function MiningPage() {
               <div style={{
                 width: 60,
                 height: 60,
-                backgroundColor: '#fff',
-                clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-                transform: 'rotate(180deg)'
-              }} />
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff">
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 17L12 22L22 17" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 12L12 17L22 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -232,13 +238,11 @@ export default function MiningPage() {
                 justifyContent: 'center',
                 marginRight: 12
               }}>
-                <div style={{
-                  width: 20,
-                  height: 20,
-                  backgroundColor: '#fff',
-                  clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-                  transform: 'rotate(180deg)'
-                }} />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 17L12 22L22 17" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 12L12 17L22 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 'bold' }}>{withdrawableBalance}</div>
