@@ -165,9 +165,7 @@ export default function MiningPage() {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
-                  <path d="M30 30L50 70L70 30H30Z" fill="#fff"/>
-                </svg>
+                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '40px', height: '40px' }} />
               </div>
             </div>
           </div>
@@ -236,9 +234,7 @@ export default function MiningPage() {
                 justifyContent: 'center',
                 marginRight: 12
               }}>
-                <svg width="20" height="20" viewBox="0 0 100 100" fill="#fff">
-                  <path d="M30 30L50 70L70 30H30Z" fill="#fff"/>
-                </svg>
+                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '20px', height: '20px' }} />
               </div>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 'bold' }}>{withdrawableBalance}</div>
