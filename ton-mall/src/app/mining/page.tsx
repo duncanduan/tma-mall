@@ -165,10 +165,8 @@ export default function MiningPage() {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff">
-                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 17L12 22L22 17" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 12L12 17L22 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
+                  <path d="M30 30L50 70L70 30H30Z" fill="#fff"/>
                 </svg>
               </div>
             </div>
@@ -238,10 +236,8 @@ export default function MiningPage() {
                 justifyContent: 'center',
                 marginRight: 12
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
-                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 17L12 22L22 17" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 12L12 17L22 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg width="20" height="20" viewBox="0 0 100 100" fill="#fff">
+                  <path d="M30 30L50 70L70 30H30Z" fill="#fff"/>
                 </svg>
               </div>
               <div>
