@@ -165,7 +165,7 @@ export default function MiningPage() {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '40px', height: '40px' }} />
+                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '80px', height: '80px' }} />
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ export default function MiningPage() {
                 justifyContent: 'center',
                 marginRight: 12
               }}>
-                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '20px', height: '20px' }} />
+                <img src="/icon_TON_color.png" alt="TON Coin" style={{ width: '40px', height: '40px' }} />
               </div>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 'bold' }}>{withdrawableBalance}</div>
