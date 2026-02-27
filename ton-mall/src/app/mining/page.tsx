@@ -410,17 +410,22 @@ export default function MiningPage() {
           borderTop: '1px solid rgba(255,255,255,0.1)'
         }}>
           {[
-            { icon: '🏠', label: 'Home' },
-            { icon: '⚙️', label: 'Upgrade' },
-            { icon: '👥', label: 'Friends' }
+            { icon: '🏠', label: 'Home', path: '/mining' },
+            { icon: '⚙️', label: 'Upgrade', path: '/upgrade' },
+            { icon: '👥', label: 'Friends', path: '/friends' }
           ].map((item, index) => (
-            <div key={index} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              fontSize: 12,
-              color: index === 0 ? '#4CD964' : 'rgba(255,255,255,0.6)'
-            }}>
+            <div 
+              key={index} 
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                fontSize: 12,
+                color: index === 0 ? '#4CD964' : 'rgba(255,255,255,0.6)',
+                cursor: 'pointer'
+              }}
+              onClick={() => router.push(item.path)}
+            >
               <div style={{ fontSize: 20, marginBottom: 4 }}>{item.icon}</div>
               {item.label}
             </div>
