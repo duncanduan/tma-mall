@@ -40,30 +40,7 @@ export default function UpgradePage() {
         padding: '16px',
         color: '#fff'
       }}>
-        {/* Header */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '24px'
-        }}>
-          <button 
-            onClick={() => router.back()}
-            style={{ 
-              fontSize: 18, 
-              fontWeight: 'bold', 
-              color: '#fff',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0
-            }}
-          >
-            ← Back
-          </button>
-          <Title level="2" style={{ color: '#fff', margin: 0 }}>Upgrade</Title>
-          <div style={{ width: 50 }} />
-        </div>
+
 
         {/* Mining Equipment Grid */}
         <div style={{ 
