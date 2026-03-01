@@ -7,6 +7,7 @@ import { Button } from '@telegram-apps/telegram-ui';
 import { Page } from '@/components/Page';
 
 import { useUserData } from '@/hooks/useUserData';
+import { logger } from '@/lib/logger';
 
 export default function UpgradePage() {
   const router = useRouter();
@@ -77,6 +78,14 @@ export default function UpgradePage() {
   const handleConfirmPurchase = async () => {
     if (!selectedEquipment || !userFriendlyAddress) return;
     
+    logger.info('Purchase requested', {
+      userAddress: userFriendlyAddress,
+      equipmentId: selectedEquipment.id,
+      equipmentName: selectedEquipment.name,
+      price: selectedEquipment.price,
+      dailyYield: selectedEquipment.dailyYield
+    });
+    
     try {
       // 发起TON转账
       const response = await tonConnectUI.sendTransaction({
@@ -90,13 +99,27 @@ export default function UpgradePage() {
         from: userFriendlyAddress
       });
       
-      console.log('Transaction sent successfully:', response);
+      logger.info('Transaction sent successfully', {
+        userAddress: userFriendlyAddress,
+        equipmentId: selectedEquipment.id,
+        equipmentName: selectedEquipment.name,
+        price: selectedEquipment.price,
+        transactionResponse: response
+      });
+      
       setMessage('Transaction sent successfully!');
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
     } catch (error: any) {
-      console.error('Transaction failed:', error);
       const errorMessage = error.message || 'Transaction failed. Please try again.';
+      logger.error('Transaction failed', {
+        userAddress: userFriendlyAddress,
+        equipmentId: selectedEquipment.id,
+        equipmentName: selectedEquipment.name,
+        price: selectedEquipment.price,
+        error: errorMessage
+      });
+      
       setMessage(errorMessage);
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);

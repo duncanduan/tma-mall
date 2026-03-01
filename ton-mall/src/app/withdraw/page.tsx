@@ -9,6 +9,7 @@ import {
   Title,
 } from '@telegram-apps/telegram-ui';
 import { Page } from '@/components/Page';
+import { logger } from '@/lib/logger';
 
 export default function WithdrawPage() {
   const router = useRouter();
@@ -29,17 +30,42 @@ export default function WithdrawPage() {
   };
 
   const handleWithdraw = async () => {
+    logger.info('Withdrawal requested', {
+      userAddress: userFriendlyAddress,
+      amount: withdrawAmount,
+      destinationAddress: withdrawAddress
+    });
+    
     if (!withdrawAmount || !withdrawAddress) {
+      logger.warn('Withdrawal failed: missing required fields', {
+        userAddress: userFriendlyAddress,
+        amount: withdrawAmount,
+        destinationAddress: withdrawAddress
+      });
       alert('Please enter amount and address');
       return;
     }
 
     setWithdrawing(true);
     try {
+      // 模拟提现过程
       await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      logger.info('Withdrawal successful', {
+        userAddress: userFriendlyAddress,
+        amount: withdrawAmount,
+        destinationAddress: withdrawAddress
+      });
+      
       alert('Withdrawal successful!');
       router.push('/mining');
-    } catch (error) {
+    } catch (error: any) {
+      logger.error('Withdrawal failed', {
+        userAddress: userFriendlyAddress,
+        amount: withdrawAmount,
+        destinationAddress: withdrawAddress,
+        error: error.message
+      });
       alert('Withdrawal failed');
     } finally {
       setWithdrawing(false);
