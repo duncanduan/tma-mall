@@ -13,6 +13,8 @@
     "@telegram-apps/sdk": "^3.11.8",
     "@telegram-apps/telegram-ui": "^2.1.13",
     "@tma.js/sdk-react": "^3.0.11",
+    "@ton-pay/api": "^0.3.0",
+    "@ton-pay/ui-react": "^0.3.0",
     "@tonconnect/ui-react": "^2.3.1",
     "eruda": "^3.4.3",
     "mongodb": "^6.21.0",

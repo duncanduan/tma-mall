@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useTonWallet, useTonAddress } from '@tonconnect/ui-react';
 import { Button } from '@telegram-apps/telegram-ui';
 import { Page } from '@/components/Page';
+import { useTonPay } from '@ton-pay/ui-react';
+import { createTonPayTransfer } from '@ton-pay/api';
 
 import { useUserData } from '@/hooks/useUserData';
 
@@ -15,48 +17,49 @@ export default function UpgradePage() {
   const { userData, isConnected } = useUserData();
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+  const { pay } = useTonPay();
 
   const miningEquipment = [
     {
       id: 1,
       name: 'F1 SPECIAL',
       price: 1,
-      dailyYield: '3.001696 TON',
+      dailyYield: '2.001696 TON',
       image: '/miner_f1_special_v2_4x3.png'
     },
     {
       id: 2,
       name: 'F1 SPECIAL',
       price: 2,
-      dailyYield: '3.001696 TON',
+      dailyYield: '2.001696 TON',
       image: '/miner_f1_special_v2_4x3.png'
     },
     {
       id: 3,
       name: 'ASLC MIENR XL2025',
-      price: 5,
-      dailyYield: '8.001664 TON',
+      price: 3,
+      dailyYield: '6.001664 TON',
       image: '/miner_aslc_xl2025_v2_4x3.png'
     },
     {
       id: 4,
       name: 'ASLC MIENR XL2025',
-      price: 10,
-      dailyYield: '8.001664 TON',
+      price: 8,
+      dailyYield: '10.001664 TON',
       image: '/miner_aslc_xl2025_v2_4x3.png'
     },
     {
       id: 5,
       name: 'ASLC MINER GLOBALMINE 4',
-      price: 10,
-      dailyYield: '16.000736 TON',
+      price: 12,
+      dailyYield: '15.000736 TON',
       image: '/miner_globalmine_4_4x3.png'
     },
     {
       id: 6,
       name: 'ASLC MINER GLOBALMINE 4',
       price: 20,
-      dailyYield: '16.000736 TON',
+      dailyYield: '20.000736 TON',
       image: '/miner_globalmine_4_4x3.png'
     }
   ];
@@ -72,10 +75,38 @@ export default function UpgradePage() {
   };
 
   const handleConfirmPurchase = () => {
-    // 实现购买逻辑
-    console.log('Confirming purchase:', selectedEquipment);
-    setShowPurchaseModal(false);
-    setSelectedEquipment(null);
+    if (!selectedEquipment || !userFriendlyAddress) return;
+    
+    const createMessage = async (senderAddr: string) => {
+      try {
+        const { message, reference } = await createTonPayTransfer(
+          {
+            amount: selectedEquipment.price,
+            asset: "TON",
+            recipientAddr: "UQAuQG-DPxana3mUrZvd6YsqPv5-p8Fo5Nyr4bKPJzjf0mcs",
+            senderAddr,
+            commentToSender: `Purchase ${selectedEquipment.name}`,
+          },
+          {
+            chain: "mainnet",
+            apiKey: "test_api_key" // 这里需要替换为实际的TonPay API密钥
+          }
+        );
+        return { message, reference };
+      } catch (error) {
+        console.error('Failed to create TonPay transfer:', error);
+        throw error;
+      }
+    };
+    
+    pay(createMessage).then(() => {
+      console.log('Transaction sent successfully:', selectedEquipment);
+    }).catch((error) => {
+      console.error('Transaction failed:', error);
+    }).finally(() => {
+      setShowPurchaseModal(false);
+      setSelectedEquipment(null);
+    });
   };
 
   const handleNavigate = (path: string) => {
