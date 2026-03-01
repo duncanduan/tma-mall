@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useTonWallet, useTonAddress } from '@tonconnect/ui-react';
 import { Button } from '@telegram-apps/telegram-ui';
 import { Page } from '@/components/Page';
-import { useTonPay } from '@ton-pay/ui-react';
-import { createTonPayTransfer } from '@ton-pay/api';
 
 import { useUserData } from '@/hooks/useUserData';
 
@@ -19,7 +17,6 @@ export default function UpgradePage() {
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
-  const { pay } = useTonPay();
 
   const miningEquipment = [
     {
@@ -76,49 +73,35 @@ export default function UpgradePage() {
     setSelectedEquipment(null);
   };
 
-  const handleConfirmPurchase = () => {
-    if (!selectedEquipment || !userFriendlyAddress) return;
+  const handleConfirmPurchase = async () => {
+    if (!wallet || !selectedEquipment) return;
     
-    const createMessage = async (senderAddr: string) => {
-      try {
-        if (!senderAddr) {
-          throw new Error('Sender address is required');
-        }
-        
-        const { message, reference } = await createTonPayTransfer(
+    try {
+      // 发起TON转账
+      await wallet.sendTransaction({
+        messages: [
           {
-            amount: selectedEquipment.price,
-            asset: "TON",
-            recipientAddr: "UQAuQG-DPxana3mUrZvd6YsqPv5-p8Fo5Nyr4bKPJzjf0mcs",
-            senderAddr,
-            commentToSender: `Purchase ${selectedEquipment.name}`,
-          },
-          {
-            chain: "mainnet",
-            apiKey: "test_api_key" // 这里需要替换为实际的TonPay API密钥
+            address: 'UQAuQG-DPxana3mUrZvd6YsqPv5-p8Fo5Nyr4bKPJzjf0mcs',
+            amount: (selectedEquipment.price * 1000000000).toString(), // 转换为纳吨
+            payload: ''
           }
-        );
-        return { message, reference };
-      } catch (error) {
-        console.error('Failed to create TonPay transfer:', error);
-        throw error;
-      }
-    };
-    
-    pay(createMessage).then(() => {
+        ],
+        validUntil: Date.now() + 5 * 60 * 1000 // 5分钟内有效
+      });
+      
       console.log('Transaction sent successfully:', selectedEquipment);
       setMessage('Transaction sent successfully!');
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
-    }).catch((error) => {
+    } catch (error) {
       console.error('Transaction failed:', error);
       setMessage('Transaction failed. Please try again.');
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
-    }).finally(() => {
+    } finally {
       setShowPurchaseModal(false);
       setSelectedEquipment(null);
-    });
+    }
   };
 
   const handleNavigate = (path: string) => {
