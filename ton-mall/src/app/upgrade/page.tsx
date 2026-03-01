@@ -22,21 +22,21 @@ export default function UpgradePage() {
       name: 'F1 SPECIAL',
       price: 1,
       dailyYield: '3.001696 TON',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTAgOTAgMTAgOTAgOTAgMTAgOTAgMTAgMTB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjI1IiBmaWxsPSIjMDBhN2ZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNTAgMzAgNTAgNzAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='
+      image: '/miner_f1_special_v2_4x3.png'
     },
     {
       id: 2,
       name: 'F1 SPECIAL',
       price: 2,
       dailyYield: '3.001696 TON',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTAgOTAgMTAgOTAgOTAgMTAgOTAgMTAgMTB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjI1IiBmaWxsPSIjMDBhN2ZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNTAgMzAgNTAgNzAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='
+      image: '/miner_aslc_xl2025_v2_4x3.png'
     },
     {
       id: 3,
       name: 'ASLC MIENR XL2025',
       price: 5,
       dailyYield: '8.001664 TON',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMjAgOTAgMjAgOTAgODAgMTAgODAgMTAgMjB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iNTAiIHI9IjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjUwIiByPSI1IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSIzMCIgcj0iNSIgZmlsbD0iIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI3MCIgcj0iNSIgZmlsbD0iIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjAgNDAgODAgNDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTIwIDYwIDgwIDYwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=='
+      image: '/miner_globalmine_4_4x3.png'
     },
     {
       id: 4,
