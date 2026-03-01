@@ -17,7 +17,7 @@ export default function UpgradePage() {
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
-  const tonConnectUI = useTonConnectUI();
+  const [tonConnectUI] = useTonConnectUI();
 
   const miningEquipment = [
     {
