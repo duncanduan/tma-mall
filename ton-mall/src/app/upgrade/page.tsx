@@ -79,7 +79,7 @@ export default function UpgradePage() {
     
     try {
       // 发起TON转账
-      await tonConnectUI.sendTransaction({
+      const response = await tonConnectUI.sendTransaction({
         messages: [
           {
             address: 'UQAuQG-DPxana3mUrZvd6YsqPv5-p8Fo5Nyr4bKPJzjf0mcs',
@@ -90,13 +90,14 @@ export default function UpgradePage() {
         from: userFriendlyAddress
       });
       
-      console.log('Transaction sent successfully:', selectedEquipment);
+      console.log('Transaction sent successfully:', response);
       setMessage('Transaction sent successfully!');
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Transaction failed:', error);
-      setMessage('Transaction failed. Please try again.');
+      const errorMessage = error.message || 'Transaction failed. Please try again.';
+      setMessage(errorMessage);
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
     } finally {
