@@ -17,6 +17,8 @@ export default function UpgradePage() {
   const { userData, isConnected } = useUserData();
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>('');
   const { pay } = useTonPay();
 
   const miningEquipment = [
@@ -79,6 +81,10 @@ export default function UpgradePage() {
     
     const createMessage = async (senderAddr: string) => {
       try {
+        if (!senderAddr) {
+          throw new Error('Sender address is required');
+        }
+        
         const { message, reference } = await createTonPayTransfer(
           {
             amount: selectedEquipment.price,
@@ -101,8 +107,14 @@ export default function UpgradePage() {
     
     pay(createMessage).then(() => {
       console.log('Transaction sent successfully:', selectedEquipment);
+      setMessage('Transaction sent successfully!');
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
     }).catch((error) => {
       console.error('Transaction failed:', error);
+      setMessage('Transaction failed. Please try again.');
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
     }).finally(() => {
       setShowPurchaseModal(false);
       setSelectedEquipment(null);
@@ -242,6 +254,25 @@ export default function UpgradePage() {
             </div>
           ))}
         </div>
+
+        {/* Message Notification */}
+        {showMessage && (
+          <div style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: message.includes('successfully') ? '#4CD964' : '#FF3B30',
+            color: '#000',
+            padding: '12px 24px',
+            borderRadius: 8,
+            fontWeight: 'bold',
+            zIndex: 2000,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+          }}>
+            {message}
+          </div>
+        )}
 
         {/* Purchase Modal */}
         {showPurchaseModal && selectedEquipment && (
