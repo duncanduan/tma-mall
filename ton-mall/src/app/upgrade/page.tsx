@@ -13,55 +13,69 @@ export default function UpgradePage() {
   const wallet = useTonWallet();
   const userFriendlyAddress = useTonAddress();
   const { userData, isConnected } = useUserData();
+  const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
+  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
 
   const miningEquipment = [
     {
       id: 1,
       name: 'F1 SPECIAL',
       price: 1,
-      dailyYield: '5.001696 TON',
+      dailyYield: '3.001696 TON',
       image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTAgOTAgMTAgOTAgOTAgMTAgOTAgMTAgMTB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjI1IiBmaWxsPSIjMDBhN2ZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNTAgMzAgNTAgNzAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='
     },
     {
       id: 2,
       name: 'F1 SPECIAL',
       price: 2,
-      dailyYield: '5.001696 TON',
+      dailyYield: '3.001696 TON',
       image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTAgOTAgMTAgOTAgOTAgMTAgOTAgMTAgMTB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjI1IiBmaWxsPSIjMDBhN2ZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNTAgMzAgNTAgNzAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='
     },
     {
       id: 3,
       name: 'ASLC MIENR XL2025',
       price: 5,
-      dailyYield: '10.001664 TON',
+      dailyYield: '8.001664 TON',
       image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMjAgOTAgMjAgOTAgODAgMTAgODAgMTAgMjB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iNTAiIHI9IjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjUwIiByPSI1IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSIzMCIgcj0iNSIgZmlsbD0iIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI3MCIgcj0iNSIgZmlsbD0iIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjAgNDAgODAgNDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTIwIDYwIDgwIDYwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=='
     },
     {
       id: 4,
       name: 'ASLC MIENR XL2025',
       price: 10,
-      dailyYield: '10.001664 TON',
+      dailyYield: '8.001664 TON',
       image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMjAgOTAgMjAgOTAgODAgMTAgODAgMTAgMjB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iNTAiIHI9IjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjUwIiByPSI1IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSIzMCIgcj0iNSIgZmlsbD0iIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI3MCIgcj0iNSIgZmlsbD0iIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjAgNDAgODAgNDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTIwIDYwIDgwIDYwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=='
     },
     {
       id: 5,
       name: 'ASLC MINER GLOBALMINE 4',
-      price: 20,
-      dailyYield: '20.000736 TON',
+      price: 10,
+      dailyYield: '16.000736 TON',
       image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMzAgOTAgMzAgOTAgNzAgMTAgNzAgMTAgMzB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iNTAiIHI9IjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjUwIiByPSI1IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI0MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjAgNTAgODAgNTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTQwIDMwIDQwIDcwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik02MCAzMCA2MCA3MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4='
     },
     {
       id: 6,
       name: 'ASLC MINER GLOBALMINE 4',
-      price: 50,
-      dailyYield: '20.000736 TON',
+      price: 20,
+      dailyYield: '16.000736 TON',
       image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMzAgOTAgMzAgOTAgNzAgMTAgNzAgMTAgMzB6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iNTAiIHI9IjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjUwIiByPSI1IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iNTAiIGN5PSI0MCIgcj0iMTUiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMjAgNTAgODAgNTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTQwIDMwIDQwIDcwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik02MCAzMCA2MCA3MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4='
     }
   ];
 
   const handlePurchase = (equipment: any) => {
+    setSelectedEquipment(equipment);
+    setShowPurchaseModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowPurchaseModal(false);
+    setSelectedEquipment(null);
+  };
+
+  const handleConfirmPurchase = () => {
     // 实现购买逻辑
-    console.log('Purchasing:', equipment);
+    console.log('Confirming purchase:', selectedEquipment);
+    setShowPurchaseModal(false);
+    setSelectedEquipment(null);
   };
 
   const handleNavigate = (path: string) => {
@@ -197,6 +211,119 @@ export default function UpgradePage() {
             </div>
           ))}
         </div>
+
+        {/* Purchase Modal */}
+        {showPurchaseModal && selectedEquipment && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: '#111',
+              borderRadius: 16,
+              padding: '24px',
+              width: '80%',
+              maxWidth: '400px',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+                <button
+                  onClick={handleCloseModal}
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: 'rgba(255,255,255,0.6)',
+                    fontSize: 18,
+                    cursor: 'pointer'
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+                <img
+                  src={selectedEquipment.image}
+                  alt={selectedEquipment.name}
+                  style={{
+                    width: 120,
+                    height: 120,
+                    objectFit: 'contain',
+                    borderRadius: 8
+                  }}
+                />
+              </div>
+              
+              <div style={{ 
+                fontSize: 18, 
+                fontWeight: 'bold',
+                textAlign: 'center',
+                marginBottom: '16px'
+              }}>
+                {selectedEquipment.name}
+              </div>
+              
+              <div style={{ 
+                fontSize: 14, 
+                color: 'rgba(255,255,255,0.8)',
+                textAlign: 'center',
+                marginBottom: '24px',
+                lineHeight: '1.5'
+              }}>
+                After upgrade, you will get {selectedEquipment.dailyYield} per day for {selectedEquipment.id} days
+              </div>
+              
+              <div style={{ 
+                fontSize: 16, 
+                fontWeight: 'bold',
+                textAlign: 'center',
+                marginBottom: '24px',
+                color: '#4CD964'
+              }}>
+                {selectedEquipment.price} TON
+              </div>
+              
+              <Button
+                size="l"
+                stretched
+                onClick={handleConfirmPurchase}
+                style={{
+                  backgroundColor: '#4CD964',
+                  color: '#000',
+                  fontWeight: 'bold',
+                  borderRadius: 8,
+                  padding: '12px',
+                  marginBottom: '12px'
+                }}
+              >
+                Confirm Purchase
+              </Button>
+              
+              <Button
+                size="l"
+                stretched
+                onClick={handleCloseModal}
+                style={{
+                  backgroundColor: 'transparent',
+                  color: 'rgba(255,255,255,0.8)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: 8,
+                  padding: '12px'
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </Page>
   );
