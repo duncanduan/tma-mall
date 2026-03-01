@@ -96,7 +96,7 @@ export default function UpgradePage() {
       setTimeout(() => setShowMessage(false), 3000);
     } catch (error) {
       console.error('Transaction failed:', error);
-      setMessage('Transaction failed. Please try again.');
+      setMessage('Transaction failed. Please try again.' + error);
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
     } finally {
