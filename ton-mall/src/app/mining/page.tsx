@@ -49,20 +49,26 @@ export default function MiningPage() {
 
   const handleWithdraw = () => {
     logger.info('Withdraw requested', {
-      userAddress: userFriendlyAddress,
-      isConnected,
-      balance: withdrawableBalance
+      context: {
+        userAddress: userFriendlyAddress,
+        isConnected,
+        balance: withdrawableBalance
+      }
     });
     
     if (!isConnected) {
       logger.warn('Withdraw failed: wallet not connected', {
-        userAddress: userFriendlyAddress
+        context: {
+          userAddress: userFriendlyAddress
+        }
       });
       setShowConnectModal(true);
     } else {
       logger.info('Navigating to withdraw page', {
-        userAddress: userFriendlyAddress,
-        balance: withdrawableBalance
+        context: {
+          userAddress: userFriendlyAddress,
+          balance: withdrawableBalance
+        }
       });
       router.push('/withdraw');
     }
@@ -70,19 +76,23 @@ export default function MiningPage() {
 
   const handleClaim = async () => {
     logger.info('Claim requested', {
-      userAddress: userFriendlyAddress,
-      currentMiningBalance,
-      withdrawableBalance
+      context: {
+        userAddress: userFriendlyAddress,
+        currentMiningBalance,
+        withdrawableBalance
+      }
     });
     
     setClaiming(true);
     try {
       const amount = await claimMining();
       logger.info('Claim successful', {
-        userAddress: userFriendlyAddress,
-        amount,
-        previousMiningBalance: currentMiningBalance,
-        previousWithdrawableBalance: withdrawableBalance
+        context: {
+          userAddress: userFriendlyAddress,
+          amount,
+          previousMiningBalance: currentMiningBalance,
+          previousWithdrawableBalance: withdrawableBalance
+        }
       });
       
       setEarned(amount);
@@ -95,16 +105,20 @@ export default function MiningPage() {
       setCurrentMiningBalance('0.000000000');
       
       logger.info('Balances updated after claim', {
-        userAddress: userFriendlyAddress,
-        newWithdrawableBalance,
-        newMiningBalance: '0.000000000'
+        context: {
+          userAddress: userFriendlyAddress,
+          newWithdrawableBalance,
+          newMiningBalance: '0.000000000'
+        }
       });
       
       setTimeout(() => setEarned(null), 3000);
     } catch (error: any) {
       logger.error('Claim failed', {
-        userAddress: userFriendlyAddress,
-        error: error.message
+        context: {
+          userAddress: userFriendlyAddress,
+          error: error.message
+        }
       });
     } finally {
       setClaiming(false);
@@ -117,18 +131,24 @@ export default function MiningPage() {
 
   const handleDisconnectWallet = async () => {
     logger.info('Disconnect wallet requested', {
-      userAddress: userFriendlyAddress
+      context: {
+        userAddress: userFriendlyAddress
+      }
     });
     
     try {
       await tonConnectUI.disconnect();
       logger.info('Wallet disconnected successfully', {
-        userAddress: userFriendlyAddress
+        context: {
+          userAddress: userFriendlyAddress
+        }
       });
     } catch (error: any) {
       logger.error('Disconnect wallet failed', {
-        userAddress: userFriendlyAddress,
-        error: error.message
+        context: {
+          userAddress: userFriendlyAddress,
+          error: error.message
+        }
       });
     }
     setShowWalletModal(false);

@@ -31,16 +31,20 @@ export default function WithdrawPage() {
 
   const handleWithdraw = async () => {
     logger.info('Withdrawal requested', {
-      userAddress: userFriendlyAddress,
-      amount: withdrawAmount,
-      destinationAddress: withdrawAddress
+      context: {
+        userAddress: userFriendlyAddress,
+        amount: withdrawAmount,
+        destinationAddress: withdrawAddress
+      }
     });
     
     if (!withdrawAmount || !withdrawAddress) {
       logger.warn('Withdrawal failed: missing required fields', {
-        userAddress: userFriendlyAddress,
-        amount: withdrawAmount,
-        destinationAddress: withdrawAddress
+        context: {
+          userAddress: userFriendlyAddress,
+          amount: withdrawAmount,
+          destinationAddress: withdrawAddress
+        }
       });
       alert('Please enter amount and address');
       return;
@@ -52,19 +56,23 @@ export default function WithdrawPage() {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       logger.info('Withdrawal successful', {
-        userAddress: userFriendlyAddress,
-        amount: withdrawAmount,
-        destinationAddress: withdrawAddress
+        context: {
+          userAddress: userFriendlyAddress,
+          amount: withdrawAmount,
+          destinationAddress: withdrawAddress
+        }
       });
       
       alert('Withdrawal successful!');
       router.push('/mining');
     } catch (error: any) {
       logger.error('Withdrawal failed', {
-        userAddress: userFriendlyAddress,
-        amount: withdrawAmount,
-        destinationAddress: withdrawAddress,
-        error: error.message
+        context: {
+          userAddress: userFriendlyAddress,
+          amount: withdrawAmount,
+          destinationAddress: withdrawAddress,
+          error: error.message
+        }
       });
       alert('Withdrawal failed');
     } finally {

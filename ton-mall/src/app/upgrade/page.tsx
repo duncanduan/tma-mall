@@ -45,21 +45,21 @@ export default function UpgradePage() {
     {
       id: 4,
       name: 'ASLC MIENR XL2025',
-      price: 8,
+      price: 5,
       dailyYield: '10.001664 TON',
       image: '/miner_aslc_xl2025_v2_4x3.png'
     },
     {
       id: 5,
       name: 'ASLC MINER GLOBALMINE 4',
-      price: 12,
+      price: 8,
       dailyYield: '15.000736 TON',
       image: '/miner_globalmine_4_4x3.png'
     },
     {
       id: 6,
       name: 'ASLC MINER GLOBALMINE 4',
-      price: 20,
+      price: 10,
       dailyYield: '20.000736 TON',
       image: '/miner_globalmine_4_4x3.png'
     }
@@ -79,11 +79,13 @@ export default function UpgradePage() {
     if (!selectedEquipment || !userFriendlyAddress) return;
     
     logger.info('Purchase requested', {
-      userAddress: userFriendlyAddress,
-      equipmentId: selectedEquipment.id,
-      equipmentName: selectedEquipment.name,
-      price: selectedEquipment.price,
-      dailyYield: selectedEquipment.dailyYield
+      context: {
+        userAddress: userFriendlyAddress,
+        equipmentId: selectedEquipment.id,
+        equipmentName: selectedEquipment.name,
+        price: selectedEquipment.price,
+        dailyYield: selectedEquipment.dailyYield
+      }
     });
     
     try {
@@ -100,11 +102,13 @@ export default function UpgradePage() {
       });
       
       logger.info('Transaction sent successfully', {
-        userAddress: userFriendlyAddress,
-        equipmentId: selectedEquipment.id,
-        equipmentName: selectedEquipment.name,
-        price: selectedEquipment.price,
-        transactionResponse: response
+        context: {
+          userAddress: userFriendlyAddress,
+          equipmentId: selectedEquipment.id,
+          equipmentName: selectedEquipment.name,
+          price: selectedEquipment.price,
+          transactionResponse: response
+        }
       });
       
       setMessage('Transaction sent successfully!');
@@ -113,11 +117,13 @@ export default function UpgradePage() {
     } catch (error: any) {
       const errorMessage = error.message || 'Transaction failed. Please try again.';
       logger.error('Transaction failed', {
-        userAddress: userFriendlyAddress,
-        equipmentId: selectedEquipment.id,
-        equipmentName: selectedEquipment.name,
-        price: selectedEquipment.price,
-        error: errorMessage
+        context: {
+          userAddress: userFriendlyAddress,
+          equipmentId: selectedEquipment.id,
+          equipmentName: selectedEquipment.name,
+          price: selectedEquipment.price,
+          error: errorMessage
+        }
       });
       
       setMessage(errorMessage);
