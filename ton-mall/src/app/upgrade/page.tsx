@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTonWallet, useTonAddress } from '@tonconnect/ui-react';
+import { useTonWallet, useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
 import { Button } from '@telegram-apps/telegram-ui';
 import { Page } from '@/components/Page';
 
@@ -17,6 +17,7 @@ export default function UpgradePage() {
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
+  const tonConnectUI = useTonConnectUI();
 
   const miningEquipment = [
     {
@@ -74,11 +75,11 @@ export default function UpgradePage() {
   };
 
   const handleConfirmPurchase = async () => {
-    if (!wallet || !selectedEquipment) return;
+    if (!selectedEquipment) return;
     
     try {
       // 发起TON转账
-      await wallet.sendTransaction({
+      await tonConnectUI.sendTransaction({
         messages: [
           {
             address: 'UQAuQG-DPxana3mUrZvd6YsqPv5-p8Fo5Nyr4bKPJzjf0mcs',
