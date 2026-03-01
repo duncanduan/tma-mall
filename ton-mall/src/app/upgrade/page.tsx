@@ -7,6 +7,7 @@ import { Button } from '@telegram-apps/telegram-ui';
 import { Page } from '@/components/Page';
 
 import { useUserData } from '@/hooks/useUserData';
+import { createTonPayTransfer } from "@ton-pay/api";
 
 export default function UpgradePage() {
   const router = useRouter();
@@ -75,19 +76,26 @@ export default function UpgradePage() {
   };
 
   const handleConfirmPurchase = async () => {
-    if (!selectedEquipment) return;
+    if (!selectedEquipment || !userFriendlyAddress) return;
     
     try {
+      // 使用TonPay创建转账消息
+      const { message } = await createTonPayTransfer(
+        {
+          amount: selectedEquipment.price,
+          asset: "TON",
+          recipientAddr: "UQAuQG-DPxana3mUrZvd6YsqPv5-p8Fo5Nyr4bKPJzjf0mcs",
+          senderAddr: userFriendlyAddress,
+          commentToSender: `Purchase ${selectedEquipment.name}`,
+        },
+        { chain: "mainnet" }
+      );
+      
       // 发起TON转账
       await tonConnectUI.sendTransaction({
-        messages: [
-          {
-            address: 'UQAuQG-DPxana3mUrZvd6YsqPv5-p8Fo5Nyr4bKPJzjf0mcs',
-            amount: (selectedEquipment.price * 1000000000).toString(), // 转换为纳吨
-            payload: ''
-          }
-        ],
-        validUntil: Date.now() + 5 * 60 * 1000 // 5分钟内有效
+        messages: [message],
+        validUntil: Math.floor(Date.now() / 1000) + 5 * 60,
+        from: userFriendlyAddress,
       });
       
       console.log('Transaction sent successfully:', selectedEquipment);
@@ -96,7 +104,7 @@ export default function UpgradePage() {
       setTimeout(() => setShowMessage(false), 3000);
     } catch (error) {
       console.error('Transaction failed:', error);
-      setMessage('Transaction failed. Please try again.' + error);
+      setMessage('Transaction failed. Please try again.');
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
     } finally {
