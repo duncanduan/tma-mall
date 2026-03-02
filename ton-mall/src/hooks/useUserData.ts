@@ -106,8 +106,9 @@ export function useUserData() {
     return userData.miningPower + boost;
   }, [userData]);
 
-  const claimMining = async () => {
-    const earned = (getEffectiveMiningPower() * 0.01).toFixed(4);
+  const claimMining = async (amount?: string) => {
+    // 如果没有提供金额，则使用基于挖矿功率的计算值
+    const earned = amount || (getEffectiveMiningPower() * 0.01).toFixed(4);
     const newBalance = (parseFloat(userData.balance) + parseFloat(earned)).toFixed(4);
     
     setUserData(prev => ({

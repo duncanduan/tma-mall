@@ -26,6 +26,7 @@ export default function MiningPage() {
   const [showWalletModal, setShowWalletModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [showClaimWarning, setShowClaimWarning] = useState(false);
+  const [tonPrice, setTonPrice] = useState<number>(1.36); // 默认价格，实际会从 API 获取
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -69,6 +70,34 @@ export default function MiningPage() {
       setWithdrawableBalance(parseFloat(userData.balance).toFixed(9));
     }
   }, [userData]);
+
+  useEffect(() => {
+    // 获取 TON 当前价格
+    const fetchTonPrice = async () => {
+      try {
+        // 使用 CoinGecko API 获取 TON 价格
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=the-open-network&vs_currencies=usd');
+        const data = await response.json();
+        if (data && data['the-open-network'] && data['the-open-network'].usd) {
+          setTonPrice(data['the-open-network'].usd);
+        }
+      } catch (error) {
+        console.error('Failed to fetch TON price:', error);
+        // 保持默认价格
+      }
+    };
+
+    fetchTonPrice();
+    // 每 5 分钟更新一次价格
+    const interval = setInterval(fetchTonPrice, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // 计算美元价值
+  const calculateDollarValue = (tonAmount: string) => {
+    const amount = parseFloat(tonAmount);
+    return (amount * tonPrice).toFixed(2);
+  };
 
   const handleClose = () => {
     if (window.Telegram && window.Telegram.WebApp) {
@@ -114,17 +143,27 @@ export default function MiningPage() {
     
     setClaiming(true);
     try {
-      const amount = await claimMining();
+      // 使用 currentMiningBalance 作为 claim 的金额
+      const amount = currentMiningBalance;
+      const newBalance = (parseFloat(withdrawableBalance) + parseFloat(amount)).toFixed(9);
+      
+      // 调用 claimMining 函数，传入实际的金额
+      await claimMining(amount);
+      
       logger.info('Claim successful', {
         context: {
           userAddress: userFriendlyAddress,
           amount,
           previousMiningBalance: currentMiningBalance,
-          previousWithdrawableBalance: withdrawableBalance
+          previousWithdrawableBalance: withdrawableBalance,
+          newWithdrawableBalance: newBalance
         }
       });
       
       setEarned(amount);
+      
+      // 更新 withdrawableBalance
+      setWithdrawableBalance(newBalance);
       
       // 清零 currentMiningBalance
       setCurrentMiningBalance('0.000000000');
@@ -133,6 +172,7 @@ export default function MiningPage() {
         context: {
           userAddress: userFriendlyAddress,
           amountClaimed: amount,
+          newWithdrawableBalance: newBalance,
           newMiningBalance: '0.000000000'
         }
       });
@@ -332,7 +372,7 @@ export default function MiningPage() {
               </div>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 'bold' }}>{withdrawableBalance}</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>≈ $13.75</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>≈ ${calculateDollarValue(withdrawableBalance)}</div>
               </div>
             </div>
             <Button
