@@ -46,13 +46,13 @@ export async function POST(request: NextRequest) {
         userAgent: request.headers.get('user-agent') || undefined,
       };
 
-   const result = await db.collection('users').updateOne(
-      { walletAddress },
-      {
-        $push: { loginRecords: loginRecord as any },
-        $set: { updatedAt: new Date() }
-      }
-    );
+      const result = await db.collection('users').updateOne(
+        { walletAddress },
+        {
+          $push: { loginRecords: loginRecord as any },
+          $set: { updatedAt: new Date() }
+        }
+      );
 
       return NextResponse.json({ message: 'User already exists, login record added', user: existingUser });
     }
@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
       }],
       withdrawRecords: [],
       taskList: [],
+      activeUpgrades: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -79,5 +80,47 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { walletAddress, walletBalance, activeUpgrades } = body;
+
+    if (!walletAddress) {
+      return NextResponse.json({ error: 'Wallet address is required' }, { status: 400 });
+    }
+
+    const client = await clientPromise;
+    const db = client.db('tma-mall');
+    
+    const updateData: any = { updatedAt: new Date() };
+    
+    if (walletBalance !== undefined) {
+      updateData.walletBalance = walletBalance;
+    }
+    
+    if (activeUpgrades !== undefined) {
+      updateData.activeUpgrades = activeUpgrades;
+    }
+
+    const result = await db.collection('users').updateOne(
+      { walletAddress },
+      { $set: updateData }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const updatedUser = await db.collection('users').findOne({ walletAddress });
+    
+    return NextResponse.json({ 
+      message: 'User updated successfully', 
+      user: updatedUser 
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
   }
 }

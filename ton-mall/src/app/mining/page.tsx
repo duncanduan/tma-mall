@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { TonConnectButton, useTonWallet, useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
 import {
@@ -18,19 +18,19 @@ export default function MiningPage() {
   const wallet = useTonWallet();
   const userFriendlyAddress = useTonAddress();
   const [tonConnectUI] = useTonConnectUI();
-  const { userData, loading, claimMining, isConnected } = useUserData();
+  const { userData, loading, claimMining, isConnected, getEffectiveMiningPower } = useUserData();
   const [claiming, setClaiming] = useState(false);
   const [earned, setEarned] = useState<string | null>(null);
-  const [currentMiningBalance, setCurrentMiningBalance] = useState('0.003935160');
+  const [currentMiningBalance, setCurrentMiningBalance] = useState('0.000000000');
   const [withdrawableBalance, setWithdrawableBalance] = useState('10.09392449');
   const [showWalletModal, setShowWalletModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
+  const [showClaimWarning, setShowClaimWarning] = useState(false);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-      if (isConnected) {
-        window.localStorage.removeItem('ton-connect-storage_lock');
-        window.localStorage.removeItem('ton-connect-storage');
+      if (isConnected && parseFloat(currentMiningBalance) > 0) {
+        setShowClaimWarning(true);
       }
     };
 
@@ -39,7 +39,36 @@ export default function MiningPage() {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isConnected]);
+  }, [isConnected, currentMiningBalance]);
+
+  useEffect(() => {
+    // 每次打开页面时清零 currentMiningBalance
+    setCurrentMiningBalance('0.000000000');
+  }, []);
+
+  useEffect(() => {
+    // 挖矿余额增长逻辑
+    if (!isConnected) return;
+
+    const miningInterval = setInterval(() => {
+      const miningPower = getEffectiveMiningPower();
+      // 每秒钟增加的挖矿余额 (miningPower / 1000000000 表示每秒的增长速度)
+      const increment = miningPower / 1000000000;
+      setCurrentMiningBalance(prev => {
+        const newBalance = parseFloat(prev) + increment;
+        return newBalance.toFixed(9);
+      });
+    }, 1000);
+
+    return () => clearInterval(miningInterval);
+  }, [isConnected, getEffectiveMiningPower]);
+
+  useEffect(() => {
+    // 从 userData 同步 withdrawableBalance
+    if (userData) {
+      setWithdrawableBalance(parseFloat(userData.balance).toFixed(9));
+    }
+  }, [userData]);
 
   const handleClose = () => {
     if (window.Telegram && window.Telegram.WebApp) {
@@ -97,17 +126,13 @@ export default function MiningPage() {
       
       setEarned(amount);
       
-      const currentMining = parseFloat(currentMiningBalance);
-      const withdrawable = parseFloat(withdrawableBalance);
-      
-      const newWithdrawableBalance = (withdrawable + currentMining).toFixed(9);
-      setWithdrawableBalance(newWithdrawableBalance);
+      // 清零 currentMiningBalance
       setCurrentMiningBalance('0.000000000');
       
       logger.info('Balances updated after claim', {
         context: {
           userAddress: userFriendlyAddress,
-          newWithdrawableBalance,
+          amountClaimed: amount,
           newMiningBalance: '0.000000000'
         }
       });
@@ -206,7 +231,7 @@ export default function MiningPage() {
           }}>
             <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', marginBottom: 4 }}>TON</div>
             <div style={{ fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 8 }}>{currentMiningBalance}</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>Total Power: 0.000019290 TON/s</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>Total Power: {(getEffectiveMiningPower() / 1000000000).toFixed(9)} TON/s</div>
           </div>
 
           {/* Mining Icon */}

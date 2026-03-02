@@ -5,8 +5,18 @@ export interface User {
   loginRecords: LoginRecord[];
   withdrawRecords: WithdrawRecord[];
   taskList: Task[];
+  activeUpgrades: Upgrade[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface Upgrade {
+  id: string;
+  name: string;
+  powerBoost: number;
+  duration: number;
+  startTime: number;
+  endTime: number;
 }
 
 export interface LoginRecord {

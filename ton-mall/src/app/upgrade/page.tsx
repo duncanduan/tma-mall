@@ -13,7 +13,7 @@ export default function UpgradePage() {
   const router = useRouter();
   const wallet = useTonWallet();
   const userFriendlyAddress = useTonAddress();
-  const { userData, isConnected } = useUserData();
+  const { userData, isConnected, addUpgrade } = useUserData();
   const [showPurchaseModal, setShowPurchaseModal] = useState<boolean>(false);
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
   const [showMessage, setShowMessage] = useState<boolean>(false);
@@ -24,42 +24,42 @@ export default function UpgradePage() {
     {
       id: 1,
       name: 'F1 SPECIAL',
-      price: 1,
+      price: 0.1,
       dailyYield: '2.001696 TON',
       image: '/miner_f1_special_v2_4x3.png'
     },
     {
       id: 2,
       name: 'F1 SPECIAL',
-      price: 2,
+      price: 0.5,
       dailyYield: '2.001696 TON',
       image: '/miner_f1_special_v2_4x3.png'
     },
     {
       id: 3,
       name: 'ASLC MIENR XL2025',
-      price: 3,
+      price: 1,
       dailyYield: '6.001664 TON',
       image: '/miner_aslc_xl2025_v2_4x3.png'
     },
     {
       id: 4,
       name: 'ASLC MIENR XL2025',
-      price: 5,
+      price: 2,
       dailyYield: '10.001664 TON',
       image: '/miner_aslc_xl2025_v2_4x3.png'
     },
     {
       id: 5,
       name: 'ASLC MINER GLOBALMINE 4',
-      price: 8,
+      price:4,
       dailyYield: '15.000736 TON',
       image: '/miner_globalmine_4_4x3.png'
     },
     {
       id: 6,
       name: 'ASLC MINER GLOBALMINE 4',
-      price: 10,
+      price: 6,
       dailyYield: '20.000736 TON',
       image: '/miner_globalmine_4_4x3.png'
     }
@@ -109,6 +109,13 @@ export default function UpgradePage() {
           price: selectedEquipment.price,
           transactionResponse: response
         }
+      });
+      
+      // 添加升级套餐
+      addUpgrade({
+        name: selectedEquipment.name,
+        powerBoost: selectedEquipment.id * 100, // 根据套餐ID计算功率提升
+        duration: selectedEquipment.id * 24 * 60 * 60 * 1000, // 持续时间（毫秒）
       });
       
       setMessage('Transaction sent successfully!');

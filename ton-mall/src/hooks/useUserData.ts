@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTonWallet, useTonAddress } from '@tonconnect/ui-react';
 import { User } from '@/types/user';
 
@@ -12,6 +12,16 @@ interface UserData {
   lastClaim: number;
   referralCode: string;
   referrals: number;
+  activeUpgrades: Upgrade[];
+}
+
+interface Upgrade {
+  id: string;
+  name: string;
+  powerBoost: number;
+  duration: number; // in milliseconds
+  startTime: number;
+  endTime: number;
 }
 
 // Simulated user data (in real app, this would come from backend)
@@ -24,6 +34,7 @@ const mockUserData: Record<string, UserData> = {
     lastClaim: Date.now(),
     referralCode: 'MINING123',
     referrals: 0,
+    activeUpgrades: [],
   }
 };
 
@@ -60,6 +71,7 @@ export function useUserData() {
               lastClaim: Date.now() - Math.random() * 86400000,
               referralCode: 'MINING' + Math.random().toString(36).substring(2, 8).toUpperCase(),
               referrals: Math.floor(Math.random() * 20),
+              activeUpgrades: data.user.activeUpgrades || [],
             });
           }
         } catch (error) {
@@ -72,6 +84,7 @@ export function useUserData() {
             lastClaim: Date.now(),
             referralCode: 'MINING123',
             referrals: 0,
+            activeUpgrades: [],
           });
         } finally {
           setLoading(false);
@@ -86,15 +99,83 @@ export function useUserData() {
     handleWalletConnection();
   }, [userFriendlyAddress]);
 
+  const getEffectiveMiningPower = useCallback(() => {
+    const now = Date.now();
+    const activeUpgrades = userData.activeUpgrades.filter(upgrade => upgrade.endTime > now);
+    const boost = activeUpgrades.reduce((total, upgrade) => total + upgrade.powerBoost, 0);
+    return userData.miningPower + boost;
+  }, [userData]);
+
   const claimMining = async () => {
-    const earned = (userData.miningPower * 0.01).toFixed(4);
+    const earned = (getEffectiveMiningPower() * 0.01).toFixed(4);
+    const newBalance = (parseFloat(userData.balance) + parseFloat(earned)).toFixed(4);
+    
     setUserData(prev => ({
       ...prev,
-      balance: (parseFloat(prev.balance) + parseFloat(earned)).toFixed(4),
+      balance: newBalance,
       lastClaim: Date.now(),
     }));
+
+    // Save to database
+    if (userFriendlyAddress) {
+      try {
+        await fetch('/api/user', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            walletAddress: userFriendlyAddress,
+            walletBalance: parseFloat(newBalance),
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to save balance:', error);
+      }
+    }
+
     return earned;
   };
 
-  return { userData, loading, claimMining, isConnected };
+  const addUpgrade = useCallback((upgrade: Omit<Upgrade, 'id' | 'startTime' | 'endTime'>) => {
+    const now = Date.now();
+    const newUpgrade: Upgrade = {
+      ...upgrade,
+      id: Date.now().toString(),
+      startTime: now,
+      endTime: now + upgrade.duration,
+    };
+
+    setUserData(prev => ({
+      ...prev,
+      activeUpgrades: [...prev.activeUpgrades, newUpgrade],
+    }));
+
+    // Save to database
+    if (userFriendlyAddress) {
+      try {
+        fetch('/api/user', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            walletAddress: userFriendlyAddress,
+            activeUpgrades: [...userData.activeUpgrades, newUpgrade],
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to save upgrade:', error);
+      }
+    }
+  }, [userFriendlyAddress, userData.activeUpgrades]);
+
+  return { 
+    userData, 
+    loading, 
+    claimMining, 
+    isConnected,
+    getEffectiveMiningPower,
+    addUpgrade
+  };
 }
